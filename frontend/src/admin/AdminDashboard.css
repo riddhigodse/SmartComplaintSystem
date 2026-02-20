@@ -1,0 +1,126 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import bgImage from "../assets/images2.jpg";
+
+const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const [complaints, setComplaints] = useState([]);
+  const [remarks, setRemarks] = useState({});
+
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        const res = await axios.get("http://127.0.0.1:5000/api/complaints");
+        setComplaints(res.data || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchComplaints();
+  }, []);
+
+  const handleRemarkChange = (id, value) => {
+    setRemarks({ ...remarks, [id]: value });
+  };
+
+  const handleRemarkSubmit = async (id) => {
+    try {
+      await axios.put(`http://127.0.0.1:5000/api/complaints/${id}/remark`, {
+        remark: remarks[id],
+      });
+      alert("Remark updated!");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleStatusChange = async (id, value) => {
+    try {
+      await axios.put(`http://127.0.0.1:5000/api/complaints/${id}/status`, {
+        status: value,
+      });
+      setComplaints(
+        complaints.map((c) => (c.id === id ? { ...c, status: value } : c))
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const styles = {
+    container: {
+      minHeight: "100vh",
+      backgroundImage: `url(${bgImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      padding: "20px",
+      fontFamily: "Arial, sans-serif",
+    },
+    card: {
+      backgroundColor: "rgba(255,255,255,0.5)",
+      padding: "15px",
+      marginBottom: "15px",
+      borderRadius: "10px",
+      boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+    },
+    input: { padding: "8px", marginRight: "10px", borderRadius: "5px", border: "1px solid #ccc", width: "200px" },
+    select: { padding: "8px", marginRight: "10px", borderRadius: "5px", border: "1px solid #ccc" },
+    button: { padding: "8px 12px", borderRadius: "5px", border: "none", backgroundColor: "#FFA41C", color: "#fff", fontWeight: "bold", cursor: "pointer" },
+    title: { fontWeight: "bold", fontSize: "16px", marginBottom: "5px" },
+    label: { fontSize: "14px", marginBottom: "5px" },
+  };
+
+  return (
+    <div style={styles.container}>
+      <button
+        onClick={() => navigate("/")}
+        style={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+          padding: "8px 12px",
+          backgroundColor: "#FFA41C",
+          border: "none",
+          borderRadius: "5px",
+          color: "#fff",
+          fontWeight: "bold",
+          cursor: "pointer",
+        }}
+      >
+        Logout
+      </button>
+      <h1 style={{ color: "#fff", marginBottom: "20px" }}>Admin Dashboard</h1>
+      {complaints.map((c) => (
+        <div key={c.id} style={styles.card}>
+          <p style={styles.title}>Title: {c.title}</p>
+          <p style={styles.label}>Category: {c.category}</p>
+          <p style={styles.label}>
+            Status:{" "}
+            <select
+              style={styles.select}
+              value={c.status || "Pending"}
+              onChange={(e) => handleStatusChange(c.id, e.target.value)}
+            >
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </p>
+          <input
+            style={styles.input}
+            type="text"
+            placeholder="Add Remark"
+            value={remarks[c.id] || ""}
+            onChange={(e) => handleRemarkChange(c.id, e.target.value)}
+          />
+          <button style={styles.button} onClick={() => handleRemarkSubmit(c.id)}>
+            Submit
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default AdminDashboard;

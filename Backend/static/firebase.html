@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Token Test</title>
+</head>
+<body>
+  <h2>Firebase Login Test</h2>
+
+  <input id="email" type="email" placeholder="Email"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+  <button onclick="login()">Login</button>
+
+  <pre id="output"></pre>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBxhUq5HJQALyPOMfHckC8YQz0XTCAru2c",
+      authDomain: "smartcomplaintsystem-7603c.firebaseapp.com",
+      projectId: "smartcomplaintsystem-7603c",
+      storageBucket: "smartcomplaintsystem-7603c.firebasestorage.app",
+      messagingSenderId: "1009359735866",
+      appId: "1:1009359735866:web:8bd672daed534459fa3903"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.login = async function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        const token = await userCred.user.getIdToken(true);
+
+        document.getElementById("output").innerText =
+          "🔥 ID TOKEN (COPY THIS):\n\n" + token;
+
+        console.log("ID TOKEN:", token);
+      } catch (err) {
+        document.getElementById("output").innerText = err.message;
+      }
+    };
+  </script>
+</body>
+</html>
