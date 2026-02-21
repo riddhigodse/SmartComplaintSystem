@@ -2,4 +2,4 @@ Backend/uploads/
 Backend/__pycache__/
 __pycache__/
 *.pyc
-.env
+.env"Backend/firebase_key.json" 
