@@ -1,19 +1,30 @@
+// src/services/api.js
 import axios from "axios";
 
+// Create axios instance with LIVE backend URL
 const API = axios.create({
-  baseURL: "http://127.0.0.1:5000/api",
+  baseURL: "https://smartcomplaintsystem-1.onrender.com/api", // Render backend API
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Optional: Add interceptor to attach token automatically if stored in localStorage
+// Automatically attach token from localStorage to every request
 API.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); // Store token after login
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (err) {
+      console.error("Error reading token from localStorage:", err);
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
 export default API;
