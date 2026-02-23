@@ -1,4 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/api/*"
+  to = "https://smartcomplaintsystem-1.onrender.com/api/:splat"
   status = 200
+  force = true
