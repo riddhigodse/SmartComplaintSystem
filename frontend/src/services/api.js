@@ -1,9 +1,9 @@
 // src/services/api.js
 import axios from "axios";
 
-// Create axios instance with LIVE backend URL
+// Create axios instance pointing to /api (Netlify proxy will handle Render)
 const API = axios.create({
-  baseURL: "https://smartcomplaintsystem-1.onrender.com/api", // Render backend API
+  baseURL: "/api", // ✅ Important: Netlify will redirect /api/* to Render backend
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,25 +12,13 @@ const API = axios.create({
 // Automatically attach token from localStorage to every request
 API.interceptors.request.use(
   (config) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-
-      // Fix for uploaded images: ensure /uploads uses /api prefix
-      if (config.url && config.url.startsWith("/uploads/")) {
-        config.url = `/uploads/${config.url.split("/uploads/")[1]}`;
-      }
-
-    } catch (err) {
-      console.error("Error reading token from localStorage:", err);
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default API;
