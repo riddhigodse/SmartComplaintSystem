@@ -11,10 +11,10 @@ def create_app():
     # Load configuration
     app.config.from_object(Config)
 
+    # ✅ Enable CORS for all origins (important for Netlify production)
+    CORS(app)
+
     # Initialize Extensions
-    # Enable CORS only for your frontend origin
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
-    
     db.init_app(app)
     JWTManager(app)
     Migrate(app, db)
@@ -37,7 +37,7 @@ def create_app():
     def uploaded_file(filename):
         return send_from_directory("uploads", filename)
 
-    # Home route
+    # Home route (for testing backend)
     @app.route("/")
     def home():
         return {"message": "Smart Complaint Backend is running 🚀"}
@@ -49,5 +49,4 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    # Run backend on all interfaces at port 5000
     app.run(debug=True, host="0.0.0.0", port=5000)
