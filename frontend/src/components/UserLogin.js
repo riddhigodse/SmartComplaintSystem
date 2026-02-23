@@ -1,3 +1,4 @@
+// frontend/src/components/UserLogin.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
@@ -15,7 +16,8 @@ const UserLogin = () => {
     }
 
     try {
-      const res = await API.post("/login", { email, password });
+      // ✅ Fixed API route: /auth/login
+      const res = await API.post("/auth/login", { email, password });
       console.log("Login Response:", res.data);
 
       const token = res.data.access_token;
@@ -27,7 +29,7 @@ const UserLogin = () => {
         return;
       }
 
-      // ✅ Save token and user info
+      // ✅ Save token, role, and userId
       localStorage.setItem("token", token);
       localStorage.setItem("userRole", role);
       localStorage.setItem("userId", id);
@@ -68,7 +70,6 @@ const UserLogin = () => {
         }}
       >
         <h2>User Login</h2>
-
         <input
           type="text"
           placeholder="Email"
@@ -77,7 +78,6 @@ const UserLogin = () => {
           style={{ padding: 10, margin: 10, width: 250 }}
         />
         <br />
-
         <input
           type="password"
           placeholder="Password"
@@ -86,7 +86,6 @@ const UserLogin = () => {
           style={{ padding: 10, margin: 10, width: 250 }}
         />
         <br />
-
         <button
           onClick={handleLogin}
           style={{

@@ -1,3 +1,4 @@
+// frontend/src/components/AdminLogin.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
@@ -15,8 +16,8 @@ const AdminLogin = () => {
     }
 
     try {
-      const res = await API.post("/login", { email, password });
-
+      // ✅ Fixed API route: /auth/login
+      const res = await API.post("/auth/login", { email, password });
       console.log("Login Response:", res.data);
 
       const token = res.data.access_token;
@@ -58,9 +59,10 @@ const AdminLogin = () => {
         backgroundPosition: "center",
       }}
     >
-      <div style={{ backgroundColor: "rgba(255,255,255,0.9)", padding: 40, borderRadius: 10, textAlign: "center" }}>
+      <div
+        style={{ backgroundColor: "rgba(255,255,255,0.9)", padding: 40, borderRadius: 10, textAlign: "center" }}
+      >
         <h2>Admin Login</h2>
-
         <input
           type="text"
           placeholder="Email"
@@ -69,7 +71,6 @@ const AdminLogin = () => {
           style={{ padding: 10, margin: 10, width: 250 }}
         />
         <br />
-
         <input
           type="password"
           placeholder="Password"
@@ -78,7 +79,6 @@ const AdminLogin = () => {
           style={{ padding: 10, margin: 10, width: 250 }}
         />
         <br />
-
         <button
           onClick={handleLogin}
           style={{
