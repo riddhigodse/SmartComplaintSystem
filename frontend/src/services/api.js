@@ -17,6 +17,12 @@ API.interceptors.request.use(
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
+
+      // Fix for uploaded images: ensure /uploads uses /api prefix
+      if (config.url && config.url.startsWith("/uploads/")) {
+        config.url = `/uploads/${config.url.split("/uploads/")[1]}`;
+      }
+
     } catch (err) {
       console.error("Error reading token from localStorage:", err);
     }
