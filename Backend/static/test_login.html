@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Test</title>
+</head>
+<body>
+    <h2>Direct Login Test</h2>
+    
+    <div>
+        <label>Email:</label>
+        <input type="text" id="email" value="admin@example.com">
+    </div>
+    
+    <div>
+        <label>Password:</label>
+        <input type="password" id="password" value="admin123">
+    </div>
+    
+    <button onclick="testLogin()">Test Login</button>
+    
+    <div id="result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
+    
+    <script>
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <h3 style="color: green;">✅ Success!</h3>
+                        <p><strong>Role:</strong> ${data.role}</p>
+                        <p><strong>User ID:</strong> ${data.user_id}</p>
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Token:</strong> ${data.access_token.substring(0, 50)}...</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3 style="color: red;">❌ Failed!</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Error:</strong> ${data.error}</p>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3 style="color: red;">❌ Exception!</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

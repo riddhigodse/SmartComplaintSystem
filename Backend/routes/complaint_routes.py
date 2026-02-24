@@ -26,13 +26,24 @@ def uploaded_file(filename):
 @jwt_required()
 def create_complaint():
     user_id = int(get_jwt_identity())  # Ensure integer
+    
+    print("=== CREATE COMPLAINT DEBUG ===")
+    print(f"User ID: {user_id}")
+    print(f"Request Form: {request.form}")
+    print(f"Request Files: {request.files}")
 
     title = request.form.get("title")
     category = request.form.get("category")
     description = request.form.get("description")
     image = request.files.get("image")
+    
+    print(f"Title: '{title}'")
+    print(f"Category: '{category}'")
+    print(f"Description: '{description}'")
+    print(f"Image: {image}")
 
     if not title or not description:
+        print("ERROR: Title or description missing!")
         return jsonify({"message": "Title and description are required"}), 400
 
     image_url = None

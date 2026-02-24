@@ -1,13 +1,15 @@
 // src/services/api.js
 import axios from "axios";
 
-// Create axios instance pointing to /api (Netlify proxy will handle Render)
+// ✅ Hardcoded for local development - change this for production
 const API = axios.create({
-  baseURL: "/api", // ✅ Important: Netlify will redirect /api/* to Render backend
+  baseURL: "http://localhost:5000/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+console.log("🔧 API Base URL:", API.defaults.baseURL);
 
 // Automatically attach token from localStorage to every request
 API.interceptors.request.use(

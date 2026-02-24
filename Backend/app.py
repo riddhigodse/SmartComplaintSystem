@@ -11,8 +11,18 @@ def create_app():
     # Load configuration
     app.config.from_object(Config)
 
-    # ✅ Enable CORS for all origins (important for Netlify production)
-    CORS(app)
+    # ✅ Enable CORS for production (update with your Netlify URL after deployment)
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": [
+                "http://localhost:3000",
+                "https://*.netlify.app",
+                "https://*.netlify.com"
+            ],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
 
     # Initialize Extensions
     db.init_app(app)

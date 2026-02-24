@@ -1,4 +1,3 @@
-// frontend/src/components/AdminLogin.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
@@ -9,6 +8,17 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Check if user is already logged in
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("userRole");
+    
+    if (token && role === "admin") {
+      // Redirect to admin dashboard if already logged in as admin
+      navigate("/admin-dashboard");
+    }
+  }, [navigate]);
+
   const handleLogin = async () => {
     if (!email || !password) {
       alert("Please enter email and password");
@@ -16,16 +26,22 @@ const AdminLogin = () => {
     }
 
     try {
-      // ✅ Fixed API route: /auth/login
-      const res = await API.post("/auth/login", { email, password });
-      console.log("Login Response:", res.data);
+      console.log("🔍 Admin attempting login to:", API.defaults.baseURL + "/login");
+      console.log("📧 Email:", email);
+      const res = await API.post("/login", { email, password });
+      console.log("✅ Admin Login Response:", res.data);
 
       const token = res.data.access_token;
-      const role = res.data.user?.role || res.data.role;
-      const id = res.data.user?.id || res.data.id;
+      const role = res.data.role || res.data.user?.role;
+      const id = res.data.user_id || res.data.user?.id;
 
       if (!token || !role) {
         alert("Login response format error");
+        return;
+      }
+
+      if (role !== "admin") {
+        alert("You are not an admin");
         return;
       }
 
@@ -33,17 +49,12 @@ const AdminLogin = () => {
       localStorage.setItem("userRole", role);
       localStorage.setItem("userId", id);
 
-      if (role !== "admin") {
-        alert("You are not an admin");
-        return;
-      }
-
       alert("Admin login successful!");
       navigate("/admin-dashboard");
 
     } catch (err) {
-      console.error("Login error:", err.response?.data || err.message);
-      alert("Invalid credentials!");
+      console.error("Admin Login error:", err.response?.data || err.message);
+      alert(err.response?.data?.error || "Invalid credentials!");
     }
   };
 
@@ -59,9 +70,7 @@ const AdminLogin = () => {
         backgroundPosition: "center",
       }}
     >
-      <div
-        style={{ backgroundColor: "rgba(255,255,255,0.9)", padding: 40, borderRadius: 10, textAlign: "center" }}
-      >
+      <div style={{ backgroundColor: "rgba(255,255,255,0.9)", padding: 40, borderRadius: 10, textAlign: "center" }}>
         <h2>Admin Login</h2>
         <input
           type="text"

@@ -31,7 +31,7 @@ const UserDashboard = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/user-login");
+    navigate("/");
   };
 
   // ✅ UPDATED DELETE FUNCTION WITH CONFIRMATION POPUP
