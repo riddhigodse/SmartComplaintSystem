@@ -26,7 +26,8 @@ git push origin main
 6. Plan: **Free**
 7. Click "Create Database"
 8. **Save the Internal Database URL** (you'll need this)
-
+postgresql:smart_complaint_user:p5ru3dOpQMsYhhYyLlol8FHNJbwHzag9@dpg-d6f11dngi27c73cqvqug-a/smart_complaint
+postgresql://smart_complaint_user:p5ru3dOpQMsYhhYyLlol8FHNJbwHzag9@dpg-d6f11dngi27c73cqvqug-a/smart_complaint
 #### 4. Deploy Backend Web Service
 1. Click "New +" → "Web Service"
 2. Connect your GitHub repository
@@ -50,6 +51,7 @@ git push origin main
 6. Click "Create Web Service"
 7. Wait for deployment (5-10 minutes)
 8. **Copy your backend URL**: `https://smart-complaint-backend.onrender.com`
+   Available at your primary URL https://smart-complaint-backend.onrender.com  
 
 #### 5. Initialize Database
 1. Go to Render Dashboard → Your Web Service
